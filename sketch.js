@@ -2,19 +2,23 @@ let soundLines = [];
 var playLine;
 var osc;
 
-var scaleArray = [493.88, 440, 392, 349.23, 329.63, 293.66, 261.63, 246.94];
+var scaleArray = [493.88, 466.16, 440, 415.30, 392, 369.99, 349.23, 329.63, 311.13, 
+                  293.66, 277.18, 261.63, 246.94];
+var notesArray = ["B4", "A#4", "A4", "G#4", "G4", "F#4", "F4", "E4", 
+                  "D#4", "D4", "C#4", "C4", "B3"];
 var furthestX = 0;
+var bottomY = 0;
 
 function setup() {
-  createCanvas(600, 400);
+  createCanvas(800, 400);
 
   // Creating playline
   playLine = new PlayLine(10);
 
   // Creating soundblocks
-  var yBuffer = 20;
+  var yBuffer = 60;
   for (i = 0; i < scaleArray.length; i++) {
-    soundLines.push(CreateLine(scaleArray[i], 20, yBuffer, 25, 'note', 0.001, 0.5, 0.1, 0.5));
+    soundLines.push(CreateLine(scaleArray[i], 0, yBuffer, 25, 'note', 0.001, 0.5, 0.1, 0.5, notesArray[i]));
     yBuffer += 20;
   }
 }
@@ -28,6 +32,9 @@ function draw() {
   playLine.move();
   playLine.checkContacts();
   playLine.render();
+  
+  textSize(20)
+  text("Press space to reset play position.", width / 3, height - 20);
 
 }
 
@@ -39,8 +46,14 @@ function mousePressed() {
   }
 }
 
-function CreateLine(soundFreq, x, y, amount, type, attack, decay, sustain, release) {
-  let s = new SoundBlockLine(soundFreq, x, y, amount, type, attack, decay, sustain, release);
+function keyPressed() {
+  if(key == " "){
+  	playLine.reset(); 
+  }
+}
+
+function CreateLine(soundFreq, x, y, amount, type, attack, decay, sustain, release, noteText) {
+  let s = new SoundBlockLine(soundFreq, x, y, amount, type, attack, decay, sustain, release, noteText);
   return s;
 }
 
@@ -81,18 +94,19 @@ SoundBlock.prototype.playSound = function() {
       this.parentLine.env.play();
     }
     this.canPlay = false;
-    setTimeout(() => this.canPlay = true, 300);
+    setTimeout(() => this.canPlay = true, 500);
   }
 }
 
-function SoundBlockLine(soundFreq, x, y, amount, type, attack, decay, sustain, release) {
+function SoundBlockLine(soundFreq, x, y, amount, type, attack, decay, sustain, release, noteText) {
 
   this.soundFreq = soundFreq;
   this.x = x;
   this.y = y;
   this.amount = amount;
   this.type = type;
-
+	this.noteText = noteText;
+  
   this.blocks = [];
 
   this.env = new p5.Envelope();
@@ -104,19 +118,22 @@ function SoundBlockLine(soundFreq, x, y, amount, type, attack, decay, sustain, r
   this.osc.amp(this.env);
   this.osc.start();
 
+  this.originalBuffer = 80;
+  this.buffer = this.originalBuffer;
   this.createBlocks();
 }
 
 SoundBlockLine.prototype.createBlocks = function() {
-  var buffer = 0;
   var i;
   for (i = 0; i < this.amount; i++) {
-    let s = new SoundBlock(this, buffer, this.y, 20, 15, this.type);
-    console.log("passing " + this.y);
-    if (buffer > furthestX) {
-      furthestX = buffer;
+    let s = new SoundBlock(this, this.buffer, this.y, 20, 15, this.type);
+    if (this.y > bottomY){
+    	bottomY = this.y + 15; 
     }
-    buffer += 25;
+    if (this.buffer > furthestX) {
+      furthestX = this.buffer + 20;
+    }
+    this.buffer += 25;
     this.blocks.push(s);
   }
 }
@@ -125,21 +142,24 @@ SoundBlockLine.prototype.render = function() {
   for (var i = 0; i < this.blocks.length; i++) {
     this.blocks[i].render();
   }
+  textSize(15)
+  text(this.noteText, this.x + this.originalBuffer - this.blocks[0].sWidth -10, this.y + this.blocks[0].sHeight);
 }
 
 function PlayLine(bpm) {
   this.bpm = bpm;
-  this.x = 0;
+  this.initialX = 80;
+  this.x = this.initialX;
 }
 
 PlayLine.prototype.render = function() {
-  line(this.x, 0, this.x, height);
+  line(this.x, 0, this.x, bottomY);
 }
 
 PlayLine.prototype.move = function() {
   this.x += 1;
   if (this.x >= furthestX) {
-    this.x = 0;
+    this.x = 80;
   }
 }
 
@@ -157,3 +177,9 @@ PlayLine.prototype.checkContacts = function() {
     }
   }
 }
+
+PlayLine.prototype.reset = function(){
+	this.x = this.initialX;
+}
+
+
