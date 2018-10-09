@@ -51,7 +51,7 @@ function preload(){
   soundFormats('wav');
   var i;
   for(i = 0; i < drumSounds.length; i++){
-    loadedSounds.push(loadSound('samples/' + drumSounds[i] + '.wav'));
+    loadedSounds.push(loadSound('samples/' + drumSounds[i]));
   }
 }
 
