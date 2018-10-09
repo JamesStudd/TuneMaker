@@ -1,15 +1,12 @@
-function SoundBlockLine(xPos, sampleIndex, y, amount, noteText) {
+function SoundBlockLine(xPos, sampleSound, y, amount, noteText) {
 
-    this.sampleIndex = sampleIndex;
     this.y = y;
     this.amount = amount;
     this.textSize = 15;
     this.textColor = 0;
     this.noteText = noteText;
 
-    var sounds = GetLoadedSounds();
-    this.sampleSound = sounds[sampleIndex];
-
+    this.sampleSound = sampleSound;
     this.originalBuffer = xPos;
     SetStartCoordinate(this.originalBuffer);
     this.buffer = this.originalBuffer;
