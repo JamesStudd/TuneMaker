@@ -145,12 +145,7 @@ SoundBlock.prototype.click = function() {
 
 SoundBlock.prototype.playSound = function() {
   if (this.canPlay) {
-    if (this.type == "drum") {
-      this.parentLine.env.play(noise);
-    } else if (this.type == "note") {
-      this.parentLine.osc.freq(this.parentLine.soundFreq);
-      this.parentLine.env.play();
-    } else if (this.type == "sample"){
+    if (this.type == "sample"){
       if (this.parentLine.sampleSound != null){
         this.parentLine.sampleSound.setVolume(1);
         this.parentLine.sampleSound.play();
@@ -170,15 +165,6 @@ function SoundBlockLine(soundFreq, originalBuffer, x, y, amount, type, attack, d
 	this.noteText = noteText;
   
   this.blocks = [];
-
-  this.env = new p5.Envelope();
-  this.env.setADSR(attack, decay, sustain, release);
-  this.env.setRange(1, 0);
-
-  this.osc = new p5.Oscillator();
-  this.osc.setType('sine');
-  this.osc.amp(this.env);
-  this.osc.start();
 
   this.sampleSound = null;
   if (this.type == "sample"){
