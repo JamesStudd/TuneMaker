@@ -8,11 +8,12 @@ var notesArray = ["B4", "A#4", "A4", "G#4", "G4", "F#4", "F4", "E4",
                   "D#4", "D4", "C#4", "C4", "B3"];
 var furthestX = 0;
 var bottomY = 0;
-var drumSounds = ["kick03", "kick04", "kick05",
-                  "OpHat01", "OpHat02", 
-                  "Snr01", "snr02", "snr03",
-                  "trash01", "trash02", "trash03",
-                  "4OpHat03", "ClHat01", "ClHat02"];
+// var drumSounds = ["kick03", "kick04", "kick05",
+//                   "OpHat01", "OpHat02", 
+//                   "Snr01", "snr02", "snr03",
+//                   "trash01", "trash02", "trash03",
+//                   "4OpHat03", "ClHat01", "ClHat02"];
+var drumSounds = ["Kick01"];
 var loadedSounds = [];
 var blockWidth = 20;
 var blockLineStart = 170;
@@ -48,7 +49,7 @@ function setup() {
 }
 
 function preload(){
-  soundFormats('wav');
+  soundFormats('mp3');
   var i;
   for(i = 0; i < drumSounds.length; i++){
     loadedSounds.push(loadSound('samples/' + drumSounds[i]));
