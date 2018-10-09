@@ -8,10 +8,10 @@ var notesArray = ["B4", "A#4", "A4", "G#4", "G4", "F#4", "F4", "E4",
                   "D#4", "D4", "C#4", "C4", "B3"];
 var furthestX = 0;
 var bottomY = 0;
-var drumSounds = ["kick03", "kick04", "kick05",
+var drumSounds = ["Kick03", "Kick04", "Kick05",
                   "OpHat01", "OpHat02", 
-                  "Snr01", "snr02", "snr03",
-                  "trash01", "trash02", "trash03",
+                  "Snr01", "Snr02", "Snr03",
+                  "Trash01", "Trash02", "Trash03",
                   "4OpHat03", "ClHat01", "ClHat02"];
 var loadedSounds = [];
 var blockWidth = 20;
